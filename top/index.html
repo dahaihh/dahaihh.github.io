@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="dahaihh, Java, 程序员" />
+  <meta name="keywords" content="top,文章阅读量排行榜" />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Java程序员之路">
-<meta name="keywords" content="Java">
+<meta name="description" content="AV.initialize(&quot;ftnnkpMcpjMV0zvpihjnWkQ0-gzGzoHsz&quot;, &quot;yBNyXWTEk2i4LQzcTsJcJ1eq&quot;);    var time=0   var title=&quot;&quot;   var url=&quot;&quot;   var query = new AV.Query(&apos;Counter&apos;);   query.notEqualTo(&apos;id&apos;,0);   query.d">
+<meta name="keywords" content="top,文章阅读量排行榜">
 <meta property="og:type" content="website">
-<meta property="og:title" content="about">
-<meta property="og:url" content="https://dahaihh.github.io/about/index.html">
+<meta property="og:title" content="Top10">
+<meta property="og:url" content="https://dahaihh.github.io/top/index.html">
 <meta property="og:site_name" content="dahaihh的博客">
-<meta property="og:description" content="Java程序员之路">
+<meta property="og:description" content="AV.initialize(&quot;ftnnkpMcpjMV0zvpihjnWkQ0-gzGzoHsz&quot;, &quot;yBNyXWTEk2i4LQzcTsJcJ1eq&quot;);    var time=0   var title=&quot;&quot;   var url=&quot;&quot;   var query = new AV.Query(&apos;Counter&apos;);   query.notEqualTo(&apos;id&apos;,0);   query.d">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-12T06:40:27.084Z">
+<meta property="og:updated_time" content="2018-04-13T02:34:33.288Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="about">
-<meta name="twitter:description" content="Java程序员之路">
+<meta name="twitter:title" content="Top10">
+<meta name="twitter:description" content="AV.initialize(&quot;ftnnkpMcpjMV0zvpihjnWkQ0-gzGzoHsz&quot;, &quot;yBNyXWTEk2i4LQzcTsJcJ1eq&quot;);    var time=0   var title=&quot;&quot;   var url=&quot;&quot;   var query = new AV.Query(&apos;Counter&apos;);   query.notEqualTo(&apos;id&apos;,0);   query.d">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://dahaihh.github.io/about/"/>
+  <link rel="canonical" href="https://dahaihh.github.io/top/"/>
 
 
 
 
 
-  <title>about | dahaihh的博客</title>
+  <title>Top10 | dahaihh的博客</title>
   
 
 
@@ -266,7 +266,7 @@
     <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">about</h1>
+	<h1 class="post-title" itemprop="name headline">Top10</h1>
 
 
 
@@ -278,7 +278,30 @@
       <div class="post-body">
         
         
-          
+          <p><div id="top"></div></p>
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+<script>AV.initialize("ftnnkpMcpjMV0zvpihjnWkQ0-gzGzoHsz", "yBNyXWTEk2i4LQzcTsJcJ1eq");</script>
+<script type="text/javascript">
+  var time=0
+  var title=""
+  var url=""
+  var query = new AV.Query('Counter');
+  query.notEqualTo('id',0);
+  query.descending('time');
+  query.limit(1000);
+  query.find().then(function (todo) {
+    for (var i=0;i<1000;i++){
+      var result=todo[i].attributes;
+      time=result.time;
+      title=result.title;
+      url=result.url;
+      var content="<a href='"+"https://dahaihh.github.io"+url+"'>"+title+"</a>"+"<br />"+"<font color='#555'>"+"阅读次数："+time+"</font>"+"<br /><br />";
+      document.getElementById("top").innerHTML+=content
+    }
+  }, function (error) {
+    console.log("error");
+  });
+</script>
         
       </div>
       
@@ -296,10 +319,6 @@
 
 
           
-
-  
-
-
 
         </div>
         
