@@ -16,6 +16,7 @@
   --text:       #1A1C24;
   --text-muted: #5B6070;
   --border:     #E6E8F0;
+  --border-strong: #D9DDEA;
 
   /* 四个合集标签色（浅色档） */
   --c-pitfall:  #D97706;   /* 踩坑实录 · 琥珀 */
@@ -28,11 +29,12 @@
 
   /* 间距尺度 */
   --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px;
-  --s-5: 24px; --s-6: 32px; --s-7: 48px; --s-8: 64px;
+  --s-5: 24px; --s-6: 32px; --s-7: 48px; --s-8: 64px; --s-9: 80px; --s-10: 96px;
 
   /* 阴影（卡片轻投影，不用重投影） */
   --shadow-card:  0 1px 2px rgba(16,18,32,.05), 0 4px 16px rgba(16,18,32,.06);
   --shadow-hover: 0 2px 6px rgba(16,18,32,.07), 0 10px 28px rgba(16,18,32,.10);
+  --shadow-hero: 0 10px 22px -18px rgba(16,18,32,.20);
 
   /* 版式 */
   --container: 1120px;
@@ -52,6 +54,8 @@
     --text:       #EDEFF6;
     --text-muted: #A0A6BA;
     --border:     #272C3C;
+    --border-strong: #333A4E;
+    --shadow-hero: 0 10px 22px -18px rgba(0,0,0,.55);
     /* 标签色提亮，保证深底对比度 */
     --c-pitfall:  #FBBF24;
     --c-cost:     #FB7185;

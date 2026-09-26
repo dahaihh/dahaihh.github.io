@@ -4,6 +4,7 @@
  * H1 = 角色定位句（站点唯一 h1）；副标题一句话；主 CTA「关注公众号」→ /contact，
  * 次级「联系我」→ /contact（PRD FR-09：联系入口不铺开在导航里）。
  * 文案已定稿，勿改写（2026-09-26 年限由 10 年改为 12 年，以本人履历为准）。
+ * 2026-09-26：Hero 底边距 48→80px（桌面）/64px（移动），分界线换 --border-strong 并加 --shadow-hero，提升与下方内容的分割感。
  */
 ---
 
@@ -23,11 +24,12 @@
 <style>
   .hero {
     background: var(--bg-soft);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border-strong);
+    box-shadow: var(--shadow-hero);
   }
 
   .hero-inner {
-    padding-block: var(--s-8) var(--s-7);
+    padding-block: var(--s-8);
   }
 
   .hero-eyebrow {
@@ -58,6 +60,10 @@
   @media (min-width: 641px) {
     h1 {
       font-size: 2.5rem;
+    }
+
+    .hero-inner {
+      padding-block: var(--s-9);
     }
   }
 </style>

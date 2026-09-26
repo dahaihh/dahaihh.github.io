@@ -126,7 +126,7 @@ th, td {
 .site-main {
   flex: 1 0 auto;
   width: 100%;
-  padding-block: var(--s-7);
+  padding-block: var(--s-8);
 }
 
 .container {
