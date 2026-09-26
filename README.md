@@ -153,8 +153,20 @@ src/
 
 ---
 
-## 5. 提交与部署约定
+## 5. 部署与提交约定
+
+### 部署（GitHub Pages）
+
+站点用 GitHub Actions 自动部署，工作流在 `.github/workflows/deploy.yml`：
+
+- **推送 `master` 自动触发**构建与发布，也可在仓库 Actions 页面手动触发（`workflow_dispatch`）。
+- **首次部署需手动开启一次**：仓库 **Settings → Pages → Source** 选「**GitHub Actions**」。没做这一步，工作流会跑但不会真正发布。
+- 仓库名是 `dahaihh.github.io`（用户主页仓库），站点在根路径，因此 `astro.config.mjs` 里 `base: '/'` 无需修改。
+- `package-lock.json` 必须已入库：`withastro/action` 靠 lockfile 探测包管理器。
+- 工作流不会改分支名，默认分支保持 `master`。
+
+### 提交约定
 
 - 提交前务必 `npm run build` **0 error**。
-- **不要随手 `git push`**：线上 `dahaihh.github.io` 目前仍从 `master` 根目录直接服务 2018 年的静态产物；推送未经部署配置的提交会让站点变成空白页。正式部署走 GitHub Actions（M4 落地，届时需在仓库 Settings → Pages 把 Source 改成「GitHub Actions」）。
+- **不要随手 `git push`**：线上 `dahaihh.github.io` 目前仍从 `master` 根目录直接服务 2018 年的静态产物；推送未经部署配置的提交会让站点变成空白页。首次部署前先按上一节把 Settings → Pages 的 Source 改成「GitHub Actions」。
 - 默认分支保持 `master`，不要改名。
