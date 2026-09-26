@@ -1,0 +1,26 @@
+---
+/**
+ * 合集总览 /series
+ * 四张合集卡：名称 / 一句说明 / 篇数 / 标签色（颜色由 SeriesCard 从 token 取）。
+ */
+import PageLayout from '../../layouts/PageLayout.astro';
+import SeriesCard from '../../components/SeriesCard.astro';
+import { getCollection } from 'astro:content';
+import { SERIES } from '../../data/series';
+
+const posts = await getCollection('posts', ({ data }) => !data.draft);
+
+const seriesCounts: Record<string, number> = {};
+for (const series of SERIES) seriesCounts[series.key] = 0;
+for (const post of posts) seriesCounts[post.data.series] = (seriesCounts[post.data.series] ?? 0) + 1;
+---
+
+<PageLayout title="合集" lead="四个固定合集。每篇文章归属且只归属一个合集，方便成体系地连着看。">
+  <div class="grid-cards grid-cards--4">
+    {
+      SERIES.map((series) => (
+        <SeriesCard series={series} count={seriesCounts[series.key] ?? 0} />
+      ))
+    }
+  </div>
+</PageLayout>

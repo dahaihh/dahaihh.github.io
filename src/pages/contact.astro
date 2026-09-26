@@ -1,0 +1,72 @@
+---
+/**
+ * 联系 · 关注 /contact
+ * 只放两样东西：公众号二维码（白底圆角卡包住）与邮箱（可一键复制）。
+ *
+ * ⚠️ 与「零运行时 JS（除汉堡菜单）」的取舍已记入报告：
+ * PRD FR-10（P0）明确要求「邮箱可一键复制」，PRD 优先级更高，
+ * 故这里保留约 12 行原生 JS —— 仅作为渐进增强，禁用 JS 时 mailto 链接照常可用。
+ */
+import PageLayout from '../layouts/PageLayout.astro';
+import WeChatCard from '../components/WeChatCard.astro';
+
+const EMAIL = 'hh1542238584@126.com';
+---
+
+<PageLayout title="联系 · 关注" lead="想第一时间看到更新就关注公众号；合作、交流、提问直接发邮件。">
+  <section class="section">
+    <h2>关注公众号</h2>
+    <WeChatCard />
+  </section>
+
+  <section class="section">
+    <h2>邮件联系</h2>
+    <div class="contact-mail">
+      <a class="contact-mail-value" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+      <button
+        class="btn btn--secondary contact-copy"
+        type="button"
+        data-copy={EMAIL}
+        aria-label={`复制邮箱地址 ${EMAIL}`}
+      >
+        复制邮箱
+      </button>
+    </div>
+  </section>
+</PageLayout>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>('.contact-copy');
+
+  button?.addEventListener('click', async () => {
+    const value = button.dataset.copy ?? '';
+    const original = button.textContent ?? '复制邮箱';
+
+    try {
+      await navigator.clipboard.writeText(value);
+      button.textContent = '已复制';
+    } catch {
+      button.textContent = '复制失败，请手动选择';
+    }
+
+    window.setTimeout(() => {
+      button.textContent = original;
+    }, 2000);
+  });
+</script>
+
+<style>
+  .contact-mail {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-3) var(--s-4);
+  }
+
+  .contact-mail-value {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    /* 长邮箱在窄屏可换行，不撑破容器 */
+    overflow-wrap: anywhere;
+  }
+</style>

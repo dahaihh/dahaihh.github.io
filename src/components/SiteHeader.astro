@@ -1,0 +1,127 @@
+---
+/**
+ * SiteHeader · 全局顶栏
+ * 桌面（>640px）显示横向导航；≤640px 收为汉堡菜单（MobileNav）。
+ * 导航 4 项 = 首页 / 文章 / 合集 / 关于；联系入口不进主导航（PRD §4）。
+ * 当前项用 aria-current="page" 标记（既是可访问性，也是高亮依据）。
+ * 注：所有站内链接带尾斜杠，与 build.format: 'directory' 的产物路径一致。
+ */
+import MobileNav from './MobileNav.astro';
+
+const NAV_ITEMS = [
+  { href: '/', label: '首页' },
+  { href: '/posts/', label: '文章' },
+  { href: '/series/', label: '合集' },
+  { href: '/about/', label: '关于' },
+];
+
+const pathname = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">AI</span>
+      <span class="brand-name">大海学AI</span>
+    </a>
+
+    <nav class="site-nav" aria-label="主导航">
+      <ul>
+        {
+          NAV_ITEMS.map((item) => (
+            <li>
+              <a
+                class="nav-link"
+                href={item.href}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <MobileNav items={NAV_ITEMS} />
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+    min-height: 64px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    color: var(--text);
+    font-weight: 700;
+    /* 触控目标 ≥44px */
+    min-height: 44px;
+  }
+  .brand:hover {
+    text-decoration: none;
+  }
+  .brand-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--r-sm);
+    background: var(--grad-brand);
+    color: #ffffff;
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+
+  .site-nav {
+    margin-left: auto;
+  }
+  .site-nav ul {
+    display: flex;
+    align-items: center;
+    gap: var(--s-1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--s-3);
+    border-radius: var(--r-sm);
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  .nav-link:hover {
+    color: var(--brand);
+    background: var(--bg-soft);
+    text-decoration: none;
+  }
+  .nav-link[aria-current='page'] {
+    color: var(--brand);
+  }
+
+  @media (max-width: 640px) {
+    .site-nav {
+      display: none;
+    }
+  }
+</style>

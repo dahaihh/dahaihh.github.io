@@ -1,0 +1,16 @@
+---
+/**
+ * 404
+ * Astro 会把 src/pages/404.astro 固定输出成 dist/404.html（不受 build.format 影响）。
+ * GitHub Pages 会自动用它作为 404 页。
+ */
+import PageLayout from '../layouts/PageLayout.astro';
+---
+
+<PageLayout title="404 · 页面走丢了" lead="你要找的页面不存在，或者已经被移动了。">
+  <div class="btn-row">
+    <a class="btn btn--primary" href="/">返回首页</a>
+    <a class="btn btn--secondary" href="/posts/">看文章</a>
+    <a class="btn btn--secondary" href="/series/">逛合集</a>
+  </div>
+</PageLayout>

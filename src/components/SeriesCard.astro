@@ -1,0 +1,66 @@
+---
+/**
+ * SeriesCard · 合集卡片（/series 总览与首页合集入口共用）
+ * 篇数由调用方传进来（首页与合集页都自己统计后传入）。
+ */
+import type { Series } from '../data/series';
+
+interface Props {
+  series: Series;
+  count: number;
+}
+
+const { series, count } = Astro.props;
+const isEmpty = count === 0;
+---
+
+<a class="card series-card" href={`/series/${series.key}/`}>
+  <div class="series-card-head">
+    <span class="series-dot" style={`--tag-c: var(${series.colorVar})`} aria-hidden="true"></span>
+    <h3>{series.name}</h3>
+  </div>
+
+  <p class="series-desc">{series.description}</p>
+
+  <p class="series-count">
+    {isEmpty ? '更新中 · 已有 0 篇' : `已有 ${count} 篇`}
+  </p>
+</a>
+
+<style>
+  .series-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  .series-card-head {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+  .series-card-head h3 {
+    margin: 0;
+    font-size: 1.0625rem;
+  }
+
+  .series-dot {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: var(--r-full);
+    background: var(--tag-c, var(--brand));
+  }
+
+  .series-desc {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+  }
+
+  .series-count {
+    margin: auto 0 0;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+</style>

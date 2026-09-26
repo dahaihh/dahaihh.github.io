@@ -1,0 +1,105 @@
+---
+/**
+ * SiteFooter · 全局页脚
+ * 联系入口放这里（PRD §4：不占主导航）。
+ */
+const year = new Date().getFullYear();
+const EMAIL = 'hh1542238584@126.com';
+
+const FOOTER_LINKS = [
+  { href: '/posts/', label: '全部文章' },
+  { href: '/series/', label: '四个合集' },
+  { href: '/about/', label: '关于我' },
+  { href: '/contact/', label: '联系 · 关注' },
+];
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <p class="footer-title">大海学AI</p>
+      <p class="footer-desc">
+        10 年开发 + 项目经理，公开记录学 AI 的每一步。不吹概念，只讲跑通的过程。
+      </p>
+    </div>
+
+    <nav class="footer-links" aria-label="页脚导航">
+      <ul>
+        {
+          FOOTER_LINKS.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))
+        }
+        <li>
+          <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="container footer-bottom">
+    <p>© {year} 大海学AI · 内容同步更新于公众号「大海学AI」</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    flex: none;
+    margin-top: var(--s-8);
+    padding-block: var(--s-7) var(--s-5);
+    background: var(--bg-soft);
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-6);
+    justify-content: space-between;
+  }
+
+  .footer-brand {
+    max-width: var(--prose);
+  }
+  .footer-title {
+    margin: 0 0 var(--s-2);
+    font-weight: 700;
+  }
+  .footer-desc {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+  }
+
+  .footer-links ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2) var(--s-5);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .footer-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+  }
+  .footer-links a:hover {
+    color: var(--brand);
+  }
+
+  .footer-bottom {
+    margin-top: var(--s-5);
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--border);
+  }
+  .footer-bottom p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+</style>

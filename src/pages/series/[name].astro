@@ -1,0 +1,54 @@
+---
+/**
+ * 合集详情 /series/[name]
+ * name 取四个固定 key（pitfall / cost / note / share）。
+ * 空合集按 FR-04 标注「更新中 · 已有 N 篇」。
+ */
+import PageLayout from '../../layouts/PageLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+import { SERIES, getSeries } from '../../data/series';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+
+  const seriesCounts: Record<string, number> = {};
+  for (const series of SERIES) seriesCounts[series.key] = 0;
+  for (const post of posts) seriesCounts[post.data.series] = (seriesCounts[post.data.series] ?? 0) + 1;
+
+  return SERIES.map((series) => ({
+    params: { name: series.key },
+    props: { seriesKey: series.key, count: seriesCounts[series.key] ?? 0 },
+  }));
+}
+
+const { seriesKey, count } = Astro.props;
+
+const series = getSeries(seriesKey);
+if (!series) {
+  throw new Error(`合集页：未知合集 key "${seriesKey}"`);
+}
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft && data.series === seriesKey))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<PageLayout title={series.name} lead={series.description}>
+  {
+    posts.length > 0 ? (
+      <div class="grid-cards">
+        {posts.map((post) => (
+          <PostCard
+            title={post.data.title}
+            date={post.data.date}
+            seriesKey={post.data.series}
+            summary={post.data.summary}
+            href={`/posts/${post.id}/`}
+          />
+        ))}
+      </div>
+    ) : (
+      <p class="empty">更新中 · 已有 {count} 篇</p>
+    )
+  }
+</PageLayout>

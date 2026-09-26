@@ -1,0 +1,63 @@
+---
+/**
+ * Hero · 首页首屏
+ * H1 = 角色定位句（站点唯一 h1）；副标题一句话；主 CTA「关注公众号」→ /contact，
+ * 次级「联系我」→ /contact（PRD FR-09：联系入口不铺开在导航里）。
+ * 文案已定稿，勿改写。
+ */
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container hero-inner">
+    <p class="hero-eyebrow">大海学AI</p>
+    <h1 id="hero-title">10 年开发 + 项目经理，公开记录学 AI 的每一步</h1>
+    <p class="hero-sub">不吹概念，只讲跑通的过程</p>
+
+    <div class="btn-row">
+      <a class="btn btn--primary" href="/contact/">关注公众号</a>
+      <a class="btn btn--secondary" href="/contact/">联系我</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    background: var(--bg-soft);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-inner {
+    padding-block: var(--s-8) var(--s-7);
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 0 var(--s-4);
+    padding: 4px var(--s-3);
+    border-radius: var(--r-full);
+    background: var(--grad-brand);
+    color: #ffffff;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.6;
+  }
+
+  h1 {
+    max-width: 20em;
+    margin-bottom: var(--s-4);
+    font-size: 1.75rem;
+  }
+
+  .hero-sub {
+    margin-bottom: var(--s-6);
+    color: var(--text-muted);
+    font-size: 1.0625rem;
+  }
+
+  @media (min-width: 641px) {
+    h1 {
+      font-size: 2.5rem;
+    }
+  }
+</style>

@@ -1,0 +1,94 @@
+---
+/**
+ * PostCard · 文章卡片
+ * 有 href 渲染成 <a class="card">（可点整卡）；无 href 渲染成 <div class="card">，
+ * 供 M1 首页「精选 3 篇」数量不足时的占位卡片使用（不产生死链）。
+ */
+import SeriesTag from './SeriesTag.astro';
+import { getSeries } from '../data/series';
+
+interface Props {
+  title: string;
+  date?: Date;
+  /** 合集 key */
+  seriesKey?: string;
+  summary?: string;
+  href?: string;
+  /** 占位卡片标记 */
+  placeholder?: boolean;
+}
+
+const { title, date, seriesKey, summary, href, placeholder = false } = Astro.props;
+
+const series = seriesKey ? getSeries(seriesKey) : undefined;
+const isoDate = date ? date.toISOString().slice(0, 10) : undefined;
+const Wrapper = href ? 'a' : 'div';
+---
+
+<Wrapper class="card post-card" href={href}>
+  <div class="post-card-top">
+    {series ? <SeriesTag seriesKey={series.key} /> : <span></span>}
+    {placeholder ? (
+      <span class="post-card-badge">占位</span>
+    ) : (
+      isoDate && <time datetime={isoDate}>{isoDate}</time>
+    )}
+  </div>
+
+  <h3 class="post-card-title">{title}</h3>
+  {summary && <p class="post-card-summary">{summary}</p>}
+
+  <span class="post-card-more">{href ? '阅读全文 →' : '待填充'}</span>
+</Wrapper>
+
+<style>
+  .post-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  .post-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    flex-wrap: wrap;
+    min-height: 26px;
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+  }
+
+  .post-card-title {
+    margin: 0;
+    font-size: 1.0625rem;
+  }
+
+  .post-card-summary {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    /* 摘要最多 3 行，卡片高度更整齐 */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .post-card-more {
+    margin-top: auto;
+    color: var(--brand);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .post-card-badge {
+    align-self: flex-start;
+    padding: 2px var(--s-2);
+    border-radius: var(--r-sm);
+    background: var(--bg-soft);
+    border: 1px dashed var(--border);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+  }
+</style>

@@ -1,0 +1,159 @@
+---
+/**
+ * PostLayout · 文章页外壳
+ * 结构：题头（合集标签 + h1 + 日期/原文链接）→ 正文排版容器（.prose，宽 --prose）
+ *      → 标签 → 文末公众号卡片 → 上下篇区。
+ * 正文由页面用 <Content /> 放进默认插槽。
+ */
+import BaseLayout from './BaseLayout.astro';
+import SeriesTag from '../components/SeriesTag.astro';
+import WeChatCard from '../components/WeChatCard.astro';
+
+interface PostLink {
+  title: string;
+  href: string;
+}
+
+interface Props {
+  title: string;
+  date: Date;
+  /** 合集 key：pitfall / cost / note / share */
+  seriesKey: string;
+  description?: string;
+  tags?: string[];
+  /** 公众号原文链接 */
+  sourceUrl?: string;
+  /** 更早的一篇 */
+  prev?: PostLink | null;
+  /** 更新的一篇 */
+  next?: PostLink | null;
+}
+
+const {
+  title,
+  date,
+  seriesKey,
+  description,
+  tags = [],
+  sourceUrl,
+  prev = null,
+  next = null,
+} = Astro.props;
+
+const isoDate = date.toISOString().slice(0, 10);
+const dateLabel = `${date.getFullYear()} 年 ${date.getMonth() + 1} 月 ${date.getDate()} 日`;
+---
+
+<BaseLayout title={title} description={description} ogType="article">
+  <div class="container">
+    <article class="post">
+      <header class="page-head post-head">
+        <SeriesTag seriesKey={seriesKey} />
+        <h1>{title}</h1>
+        <p class="meta">
+          <time datetime={isoDate}>{dateLabel}</time>
+          {
+            sourceUrl && (
+              <span>
+                · 首发于公众号 <a href={sourceUrl} target="_blank" rel="noopener">原文</a>
+              </span>
+            )
+          }
+        </p>
+      </header>
+
+      <div class="prose">
+        <slot />
+      </div>
+
+      {
+        tags.length > 0 && (
+          <ul class="tag-list post-tags">
+            {tags.map((tag) => (
+              <li>
+                <span class="tag">{tag}</span>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+
+      <div class="post-wechat">
+        <WeChatCard />
+      </div>
+
+      <nav class="post-nav" aria-label="上一篇 / 下一篇">
+        {
+          prev ? (
+            <a class="card post-nav-item" href={prev.href}>
+              <span class="post-nav-label text-muted">上一篇</span>
+              <span class="post-nav-title">{prev.title}</span>
+            </a>
+          ) : (
+            <div class="card post-nav-item post-nav-item--empty">
+              <span class="post-nav-label text-muted">上一篇</span>
+              <span class="post-nav-title text-muted">没有更早的文章了</span>
+            </div>
+          )
+        }
+        {
+          next ? (
+            <a class="card post-nav-item" href={next.href}>
+              <span class="post-nav-label text-muted">下一篇</span>
+              <span class="post-nav-title">{next.title}</span>
+            </a>
+          ) : (
+            <div class="card post-nav-item post-nav-item--empty">
+              <span class="post-nav-label text-muted">下一篇</span>
+              <span class="post-nav-title text-muted">没有更新的文章了</span>
+            </div>
+          )
+        }
+      </nav>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .post-head :global(.tag) {
+    margin-bottom: var(--s-3);
+  }
+  .post-head h1 {
+    margin-bottom: var(--s-3);
+  }
+
+  .post-tags {
+    margin-top: var(--s-6);
+  }
+
+  .post-wechat {
+    margin-top: var(--s-7);
+  }
+
+  .post-nav {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s-4);
+    margin-top: var(--s-6);
+  }
+  @media (min-width: 641px) {
+    .post-nav {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .post-nav-item {
+    display: grid;
+    gap: var(--s-1);
+    padding: var(--s-4) var(--s-5);
+  }
+  .post-nav-label {
+    font-size: 0.8125rem;
+  }
+  .post-nav-title {
+    font-weight: 600;
+  }
+  .post-nav-item--empty {
+    box-shadow: none;
+    background: var(--bg-soft);
+  }
+</style>

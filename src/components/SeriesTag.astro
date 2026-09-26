@@ -1,0 +1,25 @@
+---
+/**
+ * SeriesTag · 多色合集标签
+ * 颜色只从 series.ts 的 colorVar（token 名）取，浅/深色两档由 CSS 自动切换，
+ * 组件内不出现任何颜色字面量。
+ */
+import { getSeries } from '../data/series';
+
+interface Props {
+  /** 合集 key：pitfall / cost / note / share */
+  seriesKey: string;
+  /** 覆盖显示文案，缺省用合集名 */
+  label?: string;
+}
+
+const { seriesKey, label } = Astro.props;
+const series = getSeries(seriesKey);
+
+// 拼错 key 时让构建直接失败，好过静默渲染一个没有颜色的标签
+if (!series) {
+  throw new Error(`SeriesTag: 未知合集 key "${seriesKey}"，可用值见 src/data/series.ts`);
+}
+---
+
+<span class="tag" style={`--tag-c: var(${series.colorVar})`}>{label ?? series.name}</span>

@@ -1,0 +1,99 @@
+---
+/**
+ * BaseLayout · 全站最外层外壳
+ * 职责：<html>/<head> 元信息、tokens.css + global.css 的全局引入、
+ *       全局 header/footer、预留 <slot name="head" />（供 M4 注入 JSON-LD 等）。
+ * 不负责页面题头与正文排版（那分别是 PageLayout / PostLayout 的事）。
+ */
+import '../styles/tokens.css';
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+interface Props {
+  /** 页面标题；等于站点名时直接作为 <title>，否则追加「· 大海学AI」 */
+  title: string;
+  description?: string;
+  /** 分享卡图片，站内绝对路径，默认回落 og-default.png */
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+}
+
+const {
+  title,
+  description = '10 年开发 + 项目经理，公开记录学 AI 的每一步。不吹概念，只讲跑通的过程。',
+  ogImage = '/og-default.png',
+  ogType = 'website',
+} = Astro.props;
+
+const SITE_NAME = '大海学AI';
+const pageTitle = title === SITE_NAME ? title : `${title} · ${SITE_NAME}`;
+
+// site 已在 astro.config.mjs 配置；这里的兜底只为让类型收窄，不参与实际取值
+const site = Astro.site ?? new URL('https://dahaihh.github.io');
+const canonical = new URL(Astro.url.pathname, site);
+const ogImageUrl = new URL(ogImage, site);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0E1016" media="(prefers-color-scheme: dark)" />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- M4：JSON-LD 等页级 <head> 注入走这里 -->
+    <slot name="head" />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">跳到主内容</a>
+    <SiteHeader />
+    <main id="main" class="site-main">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    padding: var(--s-2) var(--s-4);
+    background: var(--bg-elev);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+  }
+  .skip-link:focus {
+    left: var(--s-4);
+    top: var(--s-4);
+  }
+</style>

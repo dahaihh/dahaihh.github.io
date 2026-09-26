@@ -1,0 +1,88 @@
+---
+/**
+ * 关于我 /about
+ * ⚠️ 履历只写行业（金融 / 法律 / 餐饮 / 车企），绝不出现公司名 —— 公开口径铁律。
+ * 人设段落为已定稿文案，勿改写。
+ */
+import PageLayout from '../layouts/PageLayout.astro';
+import Timeline from '../components/Timeline.astro';
+
+const PROFILE =
+  '我是大海，Engineering Data Architect。12 年走过金融、法律、餐饮、车企四个行业，现在在车企做工程数据架构。2026 年起公开记录自己学 AI 的全过程——从用 AI 做 PPT 到 vibe coding，每一步都留下过程、坑和账单。不吹概念，只讲跑通的过程。';
+
+const TIMELINE = [
+  { period: '2014–2018', role: 'Java 开发 · 金融行业' },
+  { period: '2018–2020', role: '大数据开发 · 法律行业' },
+  { period: '2020–2023', role: '应用及数据架构 · 餐饮行业' },
+  { period: '2023–now', role: '数据架构 · 车企' },
+];
+
+const SKILLS = [
+  'Java & Backend',
+  'Big Data',
+  'Application Architecture',
+  'Data Architecture',
+  'Data Governance',
+];
+
+const CERTS = ['PMP', 'CDGA', 'SAFe'];
+const EDUCATION = '河海大学 · 本科（2014）';
+---
+
+<PageLayout title="关于我" lead="一句话人设 · 履历 · 技能 · 证书" description={PROFILE}>
+  <div class="prose">
+    <p>{PROFILE}</p>
+  </div>
+
+  <section class="section">
+    <h2>履历</h2>
+    <Timeline items={TIMELINE} />
+  </section>
+
+  <section class="section">
+    <h2>技能标签</h2>
+    <ul class="tag-list">
+      {
+        SKILLS.map((skill) => (
+          <li>
+            <span class="tag">{skill}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>证书与教育</h2>
+    <ul class="about-list">
+      <li>
+        <span class="about-list-label">证书</span>
+        <span>{CERTS.join(' · ')}</span>
+      </li>
+      <li>
+        <span class="about-list-label">教育</span>
+        <span>{EDUCATION}</span>
+      </li>
+    </ul>
+  </section>
+</PageLayout>
+
+<style>
+  .about-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-3);
+  }
+  .about-list li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    margin: 0;
+  }
+  .about-list-label {
+    min-width: 4em;
+    color: var(--text-muted);
+  }
+</style>

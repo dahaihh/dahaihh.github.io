@@ -1,0 +1,61 @@
+/* =========================================================================
+   design tokens · 「大海学AI」
+   M1 只立 token 层；M3 精修只调这里的值，不动组件。
+   深色模式跟随系统（prefers-color-scheme），无手动切换。
+   ========================================================================= */
+:root {
+  /* 主色 · 靛蓝紫（VibeHub 体系） */
+  --brand:      #4338CA;
+  --brand-2:    #7C3AED;
+  --grad-brand: linear-gradient(135deg, #4338CA 0%, #7C3AED 100%);
+
+  /* 中性阶（浅色） */
+  --bg:         #FFFFFF;
+  --bg-soft:    #F6F7FB;
+  --bg-elev:    #FFFFFF;
+  --text:       #1A1C24;
+  --text-muted: #5B6070;
+  --border:     #E6E8F0;
+
+  /* 四个合集标签色（浅色档） */
+  --c-pitfall:  #D97706;   /* 踩坑实录 · 琥珀 */
+  --c-cost:     #E11D48;   /* AI账单   · 玫红 */
+  --c-note:     #0891B2;   /* 学习笔记 · 青 */
+  --c-share:    #059669;   /* 文章分享 · 翠绿 */
+
+  /* 圆角 */
+  --r-sm: 8px;  --r-md: 12px;  --r-lg: 16px;  --r-full: 999px;
+
+  /* 间距尺度 */
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px;
+  --s-5: 24px; --s-6: 32px; --s-7: 48px; --s-8: 64px;
+
+  /* 阴影（卡片轻投影，不用重投影） */
+  --shadow-card:  0 1px 2px rgba(16,18,32,.05), 0 4px 16px rgba(16,18,32,.06);
+  --shadow-hover: 0 2px 6px rgba(16,18,32,.07), 0 10px 28px rgba(16,18,32,.10);
+
+  /* 版式 */
+  --container: 1120px;
+  --prose:     720px;
+
+  /* 字体栈（全部系统字体，零外部资源） */
+  --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+               "Microsoft YaHei", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:         #0E1016;
+    --bg-soft:    #151824;
+    --bg-elev:    #191D2A;
+    --text:       #EDEFF6;
+    --text-muted: #A0A6BA;
+    --border:     #272C3C;
+    /* 标签色提亮，保证深底对比度 */
+    --c-pitfall:  #FBBF24;
+    --c-cost:     #FB7185;
+    --c-note:     #22D3EE;
+    --c-share:    #34D399;
+  }
+}

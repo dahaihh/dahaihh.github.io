@@ -1,0 +1,88 @@
+---
+/**
+ * 首页 /
+ * 结构：Hero → 精选 3 篇 → 四张合集卡入口（任务书 §5）。
+ * M1 只有 1 篇占位文章，精选位不足 3 篇时用不可点的占位卡片补足（不产生死链）。
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import PostCard from '../components/PostCard.astro';
+import SeriesCard from '../components/SeriesCard.astro';
+import { getCollection } from 'astro:content';
+import { SERIES, type SeriesKey } from '../data/series';
+
+const FEATURED_LIMIT = 3;
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+
+const featured = posts.filter((post) => post.data.featured).slice(0, FEATURED_LIMIT);
+
+// 补位用的占位卡片：M1 专属，M2 有足够真实文章后自然消失
+const FALLBACK_KEYS: SeriesKey[] = ['cost', 'note', 'share'];
+const placeholderCards = Array.from(
+  { length: Math.max(0, FEATURED_LIMIT - featured.length) },
+  (_, i) => ({
+    seriesKey: FALLBACK_KEYS[i % FALLBACK_KEYS.length],
+    summary: 'M2 引入真实文章后，此处由 frontmatter 里 featured: true 的文章自动填充。',
+  }),
+);
+
+// 每个合集的篇数
+const seriesCounts: Record<string, number> = {};
+for (const series of SERIES) seriesCounts[series.key] = 0;
+for (const post of posts) seriesCounts[post.data.series] = (seriesCounts[post.data.series] ?? 0) + 1;
+---
+
+<BaseLayout title="大海学AI｜10 年开发 + 项目经理，公开记录学 AI 的每一步">
+  <Hero />
+
+  <div class="container">
+    <section class="section">
+      <div class="section-head">
+        <h2>精选文章</h2>
+        <a href="/posts/">全部文章 →</a>
+      </div>
+
+      <div class="grid-cards">
+        {
+          featured.map((post) => (
+            <PostCard
+              title={post.data.title}
+              date={post.data.date}
+              seriesKey={post.data.series}
+              summary={post.data.summary}
+              href={`/posts/${post.id}/`}
+            />
+          ))
+        }
+        {
+          placeholderCards.map((card) => (
+            <PostCard
+              title="（占位）精选文章位"
+              seriesKey={card.seriesKey}
+              summary={card.summary}
+              placeholder
+            />
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>四个合集</h2>
+        <a href="/series/">合集总览 →</a>
+      </div>
+
+      <div class="grid-cards grid-cards--4">
+        {
+          SERIES.map((series) => (
+            <SeriesCard series={series} count={seriesCounts[series.key] ?? 0} />
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</BaseLayout>

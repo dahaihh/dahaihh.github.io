@@ -1,0 +1,30 @@
+---
+/**
+ * PageLayout · 普通页外壳（题头 + 内容槽）
+ * 用于 /posts、/series、/series/[name]、/about、/contact、/404。
+ * 首页不用它 —— 首页的 h1 在 Hero 里。
+ */
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  /** 页面 h1（每页唯一） */
+  title: string;
+  /** 题头下的一句话说明 */
+  lead?: string;
+  /** SEO description，缺省时复用 lead */
+  description?: string;
+  ogImage?: string;
+}
+
+const { title, lead, description = lead, ogImage } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} ogImage={ogImage}>
+  <div class="container">
+    <header class="page-head">
+      <h1>{title}</h1>
+      {lead && <p class="lead">{lead}</p>}
+    </header>
+    <slot />
+  </div>
+</BaseLayout>

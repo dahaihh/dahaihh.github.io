@@ -1,0 +1,46 @@
+---
+/**
+ * 文章详情 /posts/[slug]
+ * Astro 5+：集合条目用 entry.id 作为路由参数；正文用 await render(entry) 取 <Content />。
+ * 上下篇：按发布时间倒序排列后取相邻两篇（prev = 更早，next = 更新），
+ * M1 只有 1 篇时两侧都落到占位态。
+ */
+import { getCollection, render } from 'astro:content';
+import PostLayout from '../../layouts/PostLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+  );
+
+  return posts.map((entry, index) => {
+    const older = posts[index + 1];
+    const newer = posts[index - 1];
+
+    return {
+      params: { slug: entry.id },
+      props: {
+        entry,
+        prev: older ? { title: older.data.title, href: `/posts/${older.id}/` } : null,
+        next: newer ? { title: newer.data.title, href: `/posts/${newer.id}/` } : null,
+      },
+    };
+  });
+}
+
+const { entry, prev, next } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<PostLayout
+  title={entry.data.title}
+  date={entry.data.date}
+  seriesKey={entry.data.series}
+  description={entry.data.summary}
+  tags={entry.data.tags}
+  sourceUrl={entry.data.source_url}
+  prev={prev}
+  next={next}
+>
+  <Content />
+</PostLayout>

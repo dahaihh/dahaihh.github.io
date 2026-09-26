@@ -1,0 +1,86 @@
+---
+/**
+ * Timeline · 履历时间线（/about）
+ * ⚠️ 只写行业，不写公司名 —— 本人明确的公开口径铁律。
+ */
+interface TimelineItem {
+  /** 时间段，如 2014–2018 */
+  period: string;
+  /** 角色 + 行业，如「Java 开发 · 金融行业」 */
+  role: string;
+}
+
+interface Props {
+  items: TimelineItem[];
+  /** 无障碍用途的时间线名称 */
+  label?: string;
+}
+
+const { items, label = '履历时间线' } = Astro.props;
+---
+
+<ol class="timeline" aria-label={label}>
+  {
+    items.map((item) => (
+      <li class="timeline-item">
+        <span class="timeline-period">{item.period}</span>
+        <span class="timeline-role">{item.role}</span>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .timeline-item {
+    position: relative;
+    display: grid;
+    gap: var(--s-1);
+    padding: 0 0 var(--s-5) var(--s-5);
+  }
+  .timeline-item:last-child {
+    padding-bottom: 0;
+  }
+
+  /* 竖线 */
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 6px;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+  .timeline-item:last-child::before {
+    bottom: auto;
+    height: 1.4em;
+  }
+
+  /* 圆点 */
+  .timeline-item::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: var(--r-full);
+    background: var(--grad-brand);
+  }
+
+  .timeline-period {
+    font-weight: 700;
+    font-size: 0.9375rem;
+    color: var(--brand);
+  }
+
+  .timeline-role {
+    color: var(--text);
+  }
+</style>

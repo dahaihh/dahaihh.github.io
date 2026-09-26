@@ -1,0 +1,67 @@
+---
+/**
+ * Pagination · 列表分页（每页 10 篇，见 pages/posts/index.astro 的 PAGE_SIZE）
+ *
+ * M1 状态：全站只有 1 篇文章 → totalPages = 1，组件只渲染「第 1 / 1 页」，
+ * 不产生任何链接，因此不会有死链。
+ *
+ * ⚠️ 遗留（记入 M2）：当文章超过 10 篇、totalPages > 1 时，第 1 页以外的链接
+ * 指向 `${basePath}/page/[n]/`，需要同步新增路由 `src/pages/posts/page/[page].astro`
+ * 来生成这些页面。M1 按任务书只做 8 条路由，故此处不实现该路由。
+ */
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  /** 第 1 页所在路径，如 '/posts' */
+  basePath: string;
+}
+
+const { currentPage, totalPages, basePath } = Astro.props;
+
+const pageHref = (page: number) => (page <= 1 ? `${basePath}/` : `${basePath}/page/${page}/`);
+const hasPrev = currentPage > 1;
+const hasNext = currentPage < totalPages;
+---
+
+<nav class="pagination" aria-label="分页导航">
+  {
+    hasPrev ? (
+      <a class="btn btn--secondary" href={pageHref(currentPage - 1)} rel="prev">上一页</a>
+    ) : (
+      <span class="btn btn--secondary pagination-disabled" aria-disabled="true">上一页</span>
+    )
+  }
+
+  <span class="pagination-status">
+    第 {currentPage} / {totalPages} 页
+  </span>
+
+  {
+    hasNext ? (
+      <a class="btn btn--secondary" href={pageHref(currentPage + 1)} rel="next">下一页</a>
+    ) : (
+      <span class="btn btn--secondary pagination-disabled" aria-disabled="true">下一页</span>
+    )
+  }
+</nav>
+
+<style>
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-4);
+    flex-wrap: wrap;
+    margin-top: var(--s-7);
+  }
+
+  .pagination-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .pagination-status {
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+  }
+</style>

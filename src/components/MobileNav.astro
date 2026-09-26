@@ -1,0 +1,130 @@
+---
+/**
+ * MobileNav · ≤640px 的汉堡菜单
+ * 全站唯一一小段原生 JS（约 10 行，无框架、无依赖），只做展开/收起与 aria-expanded 同步。
+ * 面板用 position:absolute 挂在 .site-header 下沿（header 是 sticky，可作为定位父级），
+ * 避免撑开头部高度导致页面跳动。
+ */
+interface NavItem {
+  href: string;
+  label: string;
+}
+
+interface Props {
+  items: NavItem[];
+}
+
+const { items } = Astro.props;
+const pathname = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
+---
+
+<div class="mobile-nav-root">
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="打开导航菜单">
+    <span class="nav-toggle-bar" aria-hidden="true"></span>
+    <span class="nav-toggle-bar" aria-hidden="true"></span>
+    <span class="nav-toggle-bar" aria-hidden="true"></span>
+  </button>
+
+  <nav id="mobile-nav" class="mobile-nav" data-open="false" aria-label="移动端导航">
+    <ul>
+      {
+        items.map((item) => (
+          <li>
+            <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</div>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.nav-toggle');
+  const panel = document.getElementById('mobile-nav');
+
+  if (toggle && panel) {
+    toggle.addEventListener('click', () => {
+      const open = panel.dataset.open === 'true';
+      panel.dataset.open = String(!open);
+      toggle.setAttribute('aria-expanded', String(!open));
+      toggle.setAttribute('aria-label', open ? '打开导航菜单' : '关闭导航菜单');
+    });
+  }
+</script>
+
+<style>
+  .mobile-nav-root {
+    margin-left: auto;
+  }
+
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    /* 触控目标 ≥44×44 */
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+  }
+  .nav-toggle-bar {
+    display: block;
+    width: 18px;
+    height: 2px;
+    border-radius: var(--r-full);
+    background: var(--text);
+  }
+
+  .mobile-nav {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    padding: var(--s-3) var(--s-4) var(--s-4);
+    background: var(--bg-elev);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-hover);
+  }
+  .mobile-nav ul {
+    display: grid;
+    gap: var(--s-1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .mobile-nav a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--s-3);
+    border-radius: var(--r-sm);
+    color: var(--text);
+    font-weight: 600;
+  }
+  .mobile-nav a:hover {
+    background: var(--bg-soft);
+    text-decoration: none;
+  }
+  .mobile-nav a[aria-current='page'] {
+    color: var(--brand);
+    background: var(--bg-soft);
+  }
+
+  @media (max-width: 640px) {
+    .nav-toggle {
+      display: inline-flex;
+    }
+    .mobile-nav[data-open='true'] {
+      display: block;
+    }
+  }
+</style>

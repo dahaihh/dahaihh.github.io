@@ -1,0 +1,41 @@
+---
+/**
+ * 文章列表 /posts
+ * 全部文章按时间倒序，每页 10 篇（M1 只有 1 篇，分页只会渲染第 1 页）。
+ */
+import PageLayout from '../../layouts/PageLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import Pagination from '../../components/Pagination.astro';
+import { getCollection } from 'astro:content';
+
+const PAGE_SIZE = 10;
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+
+const totalPages = Math.max(1, Math.ceil(posts.length / PAGE_SIZE));
+const pagePosts = posts.slice(0, PAGE_SIZE);
+---
+
+<PageLayout title="文章" lead={`全部文章按发布时间倒序排列，每页 ${PAGE_SIZE} 篇。`}>
+  {
+    pagePosts.length > 0 ? (
+      <div class="grid-cards">
+        {pagePosts.map((post) => (
+          <PostCard
+            title={post.data.title}
+            date={post.data.date}
+            seriesKey={post.data.series}
+            summary={post.data.summary}
+            href={`/posts/${post.id}/`}
+          />
+        ))}
+      </div>
+    ) : (
+      <p class="empty">还没有文章，去公众号「大海学AI」看更新。</p>
+    )
+  }
+
+  <Pagination currentPage={1} totalPages={totalPages} basePath="/posts" />
+</PageLayout>

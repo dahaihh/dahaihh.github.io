@@ -1,0 +1,82 @@
+---
+/**
+ * WeChatCard · 公众号卡片（文章文末 + 联系页共用）
+ * 深色模式下二维码黑块落在深底上会识别失败，所以二维码必须垫一层**白色圆角底**
+ * （这里的底色是写死的 #FFFFFF，不跟 token 走 —— 这是识别率要求，不是视觉偏好）。
+ * 显示宽度固定 172px（≤172 的上限，兼顾 2x 屏清晰度），等比缩放、不裁白边。
+ */
+interface Props {
+  title?: string;
+  note?: string;
+}
+
+const {
+  title = '关注公众号「大海学AI」',
+  note = '更早更新 · 排版更好 · 公众号专属内容',
+} = Astro.props;
+---
+
+<aside class="wechat-card" aria-label="关注公众号">
+  <div class="wechat-qr-wrap">
+    <img
+      src="/wechat-qr.png"
+      alt="公众号「大海学AI」的微信二维码"
+      width="172"
+      height="172"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+
+  <div class="wechat-text">
+    <p class="wechat-title">{title}</p>
+    <p class="wechat-note">{note}</p>
+    <p class="wechat-hint">微信扫码，或在微信内长按识别</p>
+  </div>
+</aside>
+
+<style>
+  .wechat-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-5);
+    padding: var(--s-5);
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+  }
+
+  /* 白色圆角底：二维码识别率的硬要求，深色模式下同样保持白底 */
+  .wechat-qr-wrap {
+    flex: none;
+    padding: var(--s-4);
+    background: #ffffff;
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-card);
+  }
+  .wechat-qr-wrap img {
+    width: 172px;
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--r-sm);
+  }
+
+  .wechat-text {
+    flex: 1 1 200px;
+    min-width: 0;
+  }
+  .wechat-title {
+    margin: 0 0 var(--s-2);
+    font-weight: 700;
+  }
+  .wechat-note,
+  .wechat-hint {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+  }
+  .wechat-hint {
+    font-size: 0.875rem;
+  }
+</style>
