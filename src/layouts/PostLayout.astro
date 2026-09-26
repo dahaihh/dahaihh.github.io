@@ -42,9 +42,51 @@ const {
 
 const isoDate = date.toISOString().slice(0, 10);
 const dateLabel = `${date.getFullYear()} 年 ${date.getMonth() + 1} 月 ${date.getDate()} 日`;
+
+// FR-13：文章页结构化数据。用 BlogPosting —— 它是 Article 的子类型，
+// 对博客文章更精确，搜索引擎的富媒体结果同样识别。
+const site = Astro.site ?? new URL('https://dahaihh.github.io');
+const canonical = new URL(Astro.url.pathname, site).href;
+const jsonLd: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description: description ?? '',
+  datePublished: isoDate,
+  dateModified: isoDate,
+  inLanguage: 'zh-CN',
+  url: canonical,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+  image: new URL('/og-default.png', site).href,
+  author: { '@type': 'Person', name: '大海', url: new URL('/about/', site).href },
+  publisher: {
+    '@type': 'Organization',
+    name: '大海学AI',
+    logo: { '@type': 'ImageObject', url: new URL('/favicon-512.png', site).href },
+  },
+  isPartOf: { '@type': 'Blog', '@id': new URL('/', site).href },
+};
+
+if (tags.length > 0) jsonLd.keywords = tags.join(', ');
+
+// 面包屑：让搜索结果里能显示「首页 › 文章 › 标题」的层级
+const breadcrumbLd: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: '首页', item: new URL('/', site).href },
+    { '@type': 'ListItem', position: 2, name: '文章', item: new URL('/posts/', site).href },
+    { '@type': 'ListItem', position: 3, name: title },
+  ],
+};
 ---
 
-<BaseLayout title={title} description={description} ogType="article">
+<BaseLayout
+  title={title}
+  description={description}
+  ogType="article"
+  jsonLd={[jsonLd, breadcrumbLd]}
+>
   <div class="container">
     <article class="post">
       <header class="page-head post-head">

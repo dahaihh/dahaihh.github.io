@@ -27,9 +27,33 @@ const SKILLS = [
 
 const CERTS = ['PMP', 'CDGA', 'SAFe'];
 const EDUCATION = '河海大学 · 本科（2014）';
+
+// FR-13：关于页 Person 结构化数据。
+// ⚠️ 公开口径铁律：只写行业与角色，绝不出现雇主名称 —— 这段同样不点公司名。
+const site = Astro.site ?? new URL('https://dahaihh.github.io');
+const jsonLd: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: '大海',
+  alternateName: '大海学AI',
+  url: new URL('/about/', site).href,
+  jobTitle: 'Engineering Data Architect',
+  description: PROFILE,
+  knowsAbout: [...SKILLS, 'AI 应用'],
+  hasCredential: CERTS.map((name) => ({
+    '@type': 'EducationalOccupationalCredential',
+    name,
+  })),
+  alumniOf: { '@type': 'CollegeOrUniversity', name: '河海大学' },
+};
 ---
 
-<PageLayout title="关于我" lead="一句话人设 · 履历 · 技能 · 证书" description={PROFILE}>
+<PageLayout
+  title="关于我"
+  lead="一句话人设 · 履历 · 技能 · 证书"
+  description={PROFILE}
+  jsonLd={jsonLd}
+>
   <div class="prose">
     <p>{PROFILE}</p>
   </div>

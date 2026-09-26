@@ -17,6 +17,8 @@ interface Props {
   /** 分享卡图片，站内绝对路径，默认回落 og-default.png */
   ogImage?: string;
   ogType?: 'website' | 'article';
+  /** FR-13 结构化数据：单个对象或多段（数组）。传了就渲染成 application/ld+json */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
@@ -24,6 +26,7 @@ const {
   description = '12 年开发 + 项目经理，公开记录学 AI 的每一步。不吹概念，只讲跑通的过程。',
   ogImage = '/og-default.png',
   ogType = 'website',
+  jsonLd,
 } = Astro.props;
 
 const SITE_NAME = '大海学AI';
@@ -33,6 +36,12 @@ const pageTitle = title === SITE_NAME ? title : `${title} · ${SITE_NAME}`;
 const site = Astro.site ?? new URL('https://dahaihh.github.io');
 const canonical = new URL(Astro.url.pathname, site);
 const ogImageUrl = new URL(ogImage, site);
+
+// 把 `<` 转义成 \u003c，避免正文里的 `</script>` 提前闭合脚本标签。
+// 传数组时拆成多个 <script>，而不是塞一个顶层 JSON 数组（两者都合法，前者更常规、更好排查）
+const jsonLdTexts = (Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : []).map((item) =>
+  JSON.stringify(item).replace(/</g, '\\u003c'),
+);
 ---
 
 <!doctype html>
@@ -53,6 +62,7 @@ const ogImageUrl = new URL(ogImage, site);
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
     <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="alternate" type="application/rss+xml" title="大海学AI" href="/rss.xml" />
 
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={SITE_NAME} />
@@ -66,7 +76,14 @@ const ogImageUrl = new URL(ogImage, site);
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
 
-    <!-- M4：JSON-LD 等页级 <head> 注入走这里 -->
+    <!-- FR-13：页级结构化数据 -->
+    {
+      jsonLdTexts.map((text) => (
+        <script type="application/ld+json" set:html={text} />
+      ))
+    }
+
+    <!-- M4：其余页级 <head> 注入走这里 -->
     <slot name="head" />
   </head>
 

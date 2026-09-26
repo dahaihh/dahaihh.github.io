@@ -14,12 +14,14 @@ interface Props {
   /** SEO description，缺省时复用 lead */
   description?: string;
   ogImage?: string;
+  /** FR-13 结构化数据，透传给 BaseLayout */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title, lead, description = lead, ogImage } = Astro.props;
+const { title, lead, description = lead, ogImage, jsonLd } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} ogImage={ogImage}>
+<BaseLayout title={title} description={description} ogImage={ogImage} jsonLd={jsonLd}>
   <div class="container">
     <header class="page-head">
       <h1>{title}</h1>

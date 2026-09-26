@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# FR-12：sitemap 由 @astrojs/sitemap 在构建时生成
+Sitemap: https://dahaihh.github.io/sitemap-index.xml
