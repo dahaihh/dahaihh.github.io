@@ -114,7 +114,7 @@ npm run dev        # 浏览器里看排版
 | `favicon-192.png` `favicon-512.png` | Android / PWA 图标 | 192×192、512×512 PNG |
 | `apple-touch-icon.png` | iOS 添加到主屏幕 | 180×180 PNG，不要加透明圆角遮罩 |
 | `og-default.png` | 全站默认社交分享图 | 1200×630 PNG |
-| `wechat-qr.png` | 公众号二维码（联系页 + 文末卡片） | 344×344 PNG，**保留 24px 白边，不要裁** |
+| `images/wechat-qr.png` | 公众号二维码（联系页 + 文末卡片） | 344×344 PNG，**保留 24px 白边，不要裁** |
 
 替换后重新 `npm run build` 即可，页面里的引用路径不用改。
 
