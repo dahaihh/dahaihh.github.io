@@ -9,6 +9,7 @@ import '../styles/tokens.css';
 import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import { SITE, VERIFICATION } from '../data/site';
 
 interface Props {
   /** 页面标题；等于站点名时直接作为 <title>，否则追加「· 大海学AI」 */
@@ -23,14 +24,21 @@ interface Props {
 
 const {
   title,
-  description = '12 年开发 + 项目经理，公开记录学 AI 的每一步。不吹概念，只讲跑通的过程。',
+  description = SITE.description,
   ogImage = '/og-default.png',
   ogType = 'website',
   jsonLd,
 } = Astro.props;
 
-const SITE_NAME = '大海学AI';
+const SITE_NAME = SITE.name;
 const pageTitle = title === SITE_NAME ? title : `${title} · ${SITE_NAME}`;
+
+// 站长验证码：填了 src/data/site.ts 的 VERIFICATION 才会渲染，留空则一条都不出
+const verificationMetas = [
+  { name: 'google-site-verification', content: VERIFICATION.google },
+  { name: 'msvalidate.01', content: VERIFICATION.bing },
+  { name: 'baidu-site-verification', content: VERIFICATION.baidu },
+].filter((meta) => meta.content !== '');
 
 // site 已在 astro.config.mjs 配置；这里的兜底只为让类型收窄，不参与实际取值
 const site = Astro.site ?? new URL('https://dahaihh.github.io');
@@ -63,6 +71,13 @@ const jsonLdTexts = (Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : []).ma
     <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="alternate" type="application/rss+xml" title="大海学AI" href="/rss.xml" />
+
+    <!-- M4：站长验证码，来源 src/data/site.ts -->
+    {
+      verificationMetas.map((meta) => (
+        <meta name={meta.name} content={meta.content} />
+      ))
+    }
 
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={SITE_NAME} />
