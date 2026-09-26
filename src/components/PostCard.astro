@@ -1,8 +1,7 @@
 ---
 /**
  * PostCard · 文章卡片
- * 有 href 渲染成 <a class="card">（可点整卡）；无 href 渲染成 <div class="card">，
- * 供 M1 首页「精选 3 篇」数量不足时的占位卡片使用（不产生死链）。
+ * 整卡渲染成 <a class="card">，点击进入文章详情。
  */
 import SeriesTag from './SeriesTag.astro';
 import { getSeries } from '../data/series';
@@ -13,33 +12,26 @@ interface Props {
   /** 合集 key */
   seriesKey?: string;
   summary?: string;
-  href?: string;
-  /** 占位卡片标记 */
-  placeholder?: boolean;
+  href: string;
 }
 
-const { title, date, seriesKey, summary, href, placeholder = false } = Astro.props;
+const { title, date, seriesKey, summary, href } = Astro.props;
 
 const series = seriesKey ? getSeries(seriesKey) : undefined;
 const isoDate = date ? date.toISOString().slice(0, 10) : undefined;
-const Wrapper = href ? 'a' : 'div';
 ---
 
-<Wrapper class="card post-card" href={href}>
+<a class="card post-card" href={href}>
   <div class="post-card-top">
     {series ? <SeriesTag seriesKey={series.key} /> : <span></span>}
-    {placeholder ? (
-      <span class="post-card-badge">占位</span>
-    ) : (
-      isoDate && <time datetime={isoDate}>{isoDate}</time>
-    )}
+    {isoDate && <time datetime={isoDate}>{isoDate}</time>}
   </div>
 
   <h3 class="post-card-title">{title}</h3>
   {summary && <p class="post-card-summary">{summary}</p>}
 
-  <span class="post-card-more">{href ? '阅读全文 →' : '待填充'}</span>
-</Wrapper>
+  <span class="post-card-more">阅读全文 →</span>
+</a>
 
 <style>
   .post-card {
@@ -80,15 +72,5 @@ const Wrapper = href ? 'a' : 'div';
     color: var(--brand);
     font-size: 0.875rem;
     font-weight: 600;
-  }
-
-  .post-card-badge {
-    align-self: flex-start;
-    padding: 2px var(--s-2);
-    border-radius: var(--r-sm);
-    background: var(--bg-soft);
-    border: 1px dashed var(--border);
-    color: var(--text-muted);
-    font-size: 0.75rem;
   }
 </style>

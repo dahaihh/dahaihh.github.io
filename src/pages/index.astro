@@ -2,14 +2,14 @@
 /**
  * 首页 /
  * 结构：Hero → 精选 3 篇 → 四张合集卡入口（任务书 §5）。
- * M1 只有 1 篇占位文章，精选位不足 3 篇时用不可点的占位卡片补足（不产生死链）。
+ * 精选不足 3 篇时，用其余文章按发布时间倒序补足，凑不满就只渲染现有的，不造假卡片。
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import PostCard from '../components/PostCard.astro';
 import SeriesCard from '../components/SeriesCard.astro';
 import { getCollection } from 'astro:content';
-import { SERIES, type SeriesKey } from '../data/series';
+import { SERIES } from '../data/series';
 
 const FEATURED_LIMIT = 3;
 
@@ -17,17 +17,16 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime(),
 );
 
+// 精选优先：featured 按发布时间倒序取前 3，再用其余文章倒序补足（与已选中的去重）
 const featured = posts.filter((post) => post.data.featured).slice(0, FEATURED_LIMIT);
-
-// 补位用的占位卡片：M1 专属，M2 有足够真实文章后自然消失
-const FALLBACK_KEYS: SeriesKey[] = ['cost', 'note', 'share'];
-const placeholderCards = Array.from(
-  { length: Math.max(0, FEATURED_LIMIT - featured.length) },
-  (_, i) => ({
-    seriesKey: FALLBACK_KEYS[i % FALLBACK_KEYS.length],
-    summary: 'M2 引入真实文章后，此处由 frontmatter 里 featured: true 的文章自动填充。',
-  }),
-);
+const selected = [...featured];
+const picked = new Set(selected.map((post) => post.id));
+for (const post of posts) {
+  if (selected.length >= FEATURED_LIMIT) break;
+  if (picked.has(post.id)) continue;
+  selected.push(post);
+  picked.add(post.id);
+}
 
 // 每个合集的篇数
 const seriesCounts: Record<string, number> = {};
@@ -47,23 +46,13 @@ for (const post of posts) seriesCounts[post.data.series] = (seriesCounts[post.da
 
       <div class="grid-cards">
         {
-          featured.map((post) => (
+          selected.map((post) => (
             <PostCard
               title={post.data.title}
               date={post.data.date}
               seriesKey={post.data.series}
               summary={post.data.summary}
               href={`/posts/${post.id}/`}
-            />
-          ))
-        }
-        {
-          placeholderCards.map((card) => (
-            <PostCard
-              title="（占位）精选文章位"
-              seriesKey={card.seriesKey}
-              summary={card.summary}
-              placeholder
             />
           ))
         }
