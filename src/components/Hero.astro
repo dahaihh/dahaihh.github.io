@@ -4,7 +4,12 @@
  * H1 = 角色定位句（站点唯一 h1）；副标题一句话；主 CTA「关注公众号」→ /contact，
  * 次级「联系我」→ /contact（PRD FR-09：联系入口不铺开在导航里）。
  * 文案已定稿，勿改写（2026-09-26 年限由 10 年改为 12 年，以本人履历为准）。
- * 2026-09-26：Hero 底边距 48→80px（桌面）/64px（移动），分界线换 --border-strong 并加 --shadow-hero，提升与下方内容的分割感。
+ *
+ * 视觉（M3 · 2026-09-26）：
+ *  - 底色由纯 --bg-soft 换为 --grad-hero（蓝紫渐变，PRD §8.1 明确要求）；
+ *  - 渐变底上文案统一取 --on-brand* 系列，按钮反色（白底靛蓝字 / 描边白字）；
+ *  - ::before 叠一层左上柔光，给平面渐变一点纵深，不加动效。
+ *  - 底边距沿用 2026-09-26 的 48→80px（桌面）/64px（移动）。
  */
 ---
 
@@ -23,12 +28,25 @@
 
 <style>
   .hero {
-    background: var(--bg-soft);
+    position: relative;
+    overflow: hidden;
+    background: var(--grad-hero);
+    color: var(--on-brand);
     border-bottom: 1px solid var(--border-strong);
     box-shadow: var(--shadow-hero);
   }
 
+  /* 左上角柔光，让纯渐变有纵深；纯装饰，不参与交互 */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(680px 320px at 12% -30%, var(--on-brand-fill), transparent 70%);
+    pointer-events: none;
+  }
+
   .hero-inner {
+    position: relative;
     padding-block: var(--s-8);
   }
 
@@ -38,8 +56,9 @@
     margin: 0 0 var(--s-4);
     padding: 4px var(--s-3);
     border-radius: var(--r-full);
-    background: var(--grad-brand);
-    color: #ffffff;
+    background: var(--on-brand-fill);
+    border: 1px solid var(--on-brand-line);
+    color: var(--on-brand);
     font-size: 0.8125rem;
     font-weight: 600;
     line-height: 1.6;
@@ -49,17 +68,34 @@
     max-width: 20em;
     margin-bottom: var(--s-4);
     font-size: 1.75rem;
+    letter-spacing: -0.02em;
   }
 
   .hero-sub {
     margin-bottom: var(--s-6);
-    color: var(--text-muted);
+    color: var(--on-brand-soft);
     font-size: 1.0625rem;
+  }
+
+  /* 渐变底上的按钮必须反色，否则白底白字、蓝底蓝字都会糊掉 */
+  .btn--primary {
+    background: var(--on-brand);
+    color: var(--brand);
+  }
+
+  .btn--secondary {
+    background: transparent;
+    color: var(--on-brand);
+    border-color: var(--on-brand-line);
+  }
+  .btn--secondary:hover {
+    border-color: var(--on-brand);
+    color: var(--on-brand);
   }
 
   @media (min-width: 641px) {
     h1 {
-      font-size: 2.5rem;
+      font-size: 2.75rem;
     }
 
     .hero-inner {

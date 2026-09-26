@@ -37,6 +37,9 @@ h1, h2, h3, h4, h5, h6 {
   text-wrap: balance;
 }
 
+/* 页内锚点跳转时给 sticky 顶栏留出位置，标题别被压住 */
+:where(h2, h3) { scroll-margin-top: 88px; }
+
 p { margin: 0 0 var(--s-4); }
 
 a {
@@ -115,6 +118,10 @@ th, td {
   text-align: left;
 }
 
+::selection {
+  background: color-mix(in srgb, var(--brand) 22%, transparent);
+}
+
 /* 键盘可达性：统一可见焦点环 */
 :focus-visible {
   outline: 2px solid var(--brand);
@@ -150,7 +157,22 @@ th, td {
   flex-wrap: wrap;
   margin-bottom: var(--s-5);
 }
-.section-head h2 { margin: 0; font-size: 1.5rem; }
+.section-head h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin: 0;
+  font-size: 1.5rem;
+}
+/* 小节标题的品牌色标（VibeHub 体系的渐变在正文区的唯一落点） */
+.section-head h2::before {
+  content: '';
+  flex: none;
+  width: 4px;
+  height: 1.05em;
+  border-radius: var(--r-full);
+  background: var(--grad-brand);
+}
 
 /* ---------- 卡片 ---------- */
 .card {

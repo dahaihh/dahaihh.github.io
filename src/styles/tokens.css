@@ -8,6 +8,16 @@
   --brand:      #4338CA;
   --brand-2:    #7C3AED;
   --grad-brand: linear-gradient(135deg, #4338CA 0%, #7C3AED 100%);
+  /* Hero 专用渐变（PRD §8.1「Hero 用蓝紫渐变」）：
+     三段式，中段偏紫，比两端直连更耐看、不显平 */
+  --grad-hero:  linear-gradient(135deg, #4338CA 0%, #6D28D9 52%, #7C3AED 100%);
+  /* 渐变底上的前景色（只给 Hero 用，别在浅色卡面上误用） */
+  --on-brand:      #FFFFFF;
+  /* 副标题用的次级白：渐变最紫端(#7C3AED)对比度约 5.1:1，过 PRD §7 的 4.5 线；
+     若降到 .86 会掉到 4.5 边缘，别再往下调 */
+  --on-brand-soft: rgba(255, 255, 255, .92);
+  --on-brand-line: rgba(255, 255, 255, .28);
+  --on-brand-fill: rgba(255, 255, 255, .14);
 
   /* 中性阶（浅色） */
   --bg:         #FFFFFF;
@@ -56,6 +66,8 @@
     --border:     #272C3C;
     --border-strong: #333A4E;
     --shadow-hero: 0 10px 22px -18px rgba(0,0,0,.55);
+    /* 深色档 Hero：整体压暗一档，大面积高饱和在暗环境里会刺眼 */
+    --grad-hero:  linear-gradient(135deg, #3730A3 0%, #5B21B6 55%, #6D28D9 100%);
     /* 标签色提亮，保证深底对比度 */
     --c-pitfall:  #FBBF24;
     --c-cost:     #FB7185;
