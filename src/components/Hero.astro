@@ -5,10 +5,13 @@
  * 次级「联系我」→ /contact（PRD FR-09：联系入口不铺开在导航里）。
  * 文案已定稿，勿改写（2026-09-26 年限由 10 年改为 12 年，以本人履历为准）。
  *
- * 视觉（M3 · 2026-09-26）：
- *  - 底色由纯 --bg-soft 换为 --grad-hero（蓝紫渐变，PRD §8.1 明确要求）；
- *  - 渐变底上文案统一取 --on-brand* 系列，按钮反色（白底靛蓝字 / 描边白字）；
- *  - ::before 叠一层左上柔光，给平面渐变一点纵深，不加动效。
+ * 视觉（M3 · 2026-09-26，2026-09-27 随新 icon 改蓝系）：
+ *  - 底色由纯 --bg-soft 换为 --grad-hero（蓝渐变，PRD §8.1）；
+ *  - 渐变底上文案统一取 --on-brand* 系列，按钮反色（白底蓝字 / 描边白字）；
+ *    主按钮文字用 --brand-ink 而非 --brand —— 深色档 --brand 会提亮，
+ *    压在纯白按钮上只剩 2.5:1；
+ *  - ::before 叠双柔光：右下青色（呼应 icon 的青蓝笔触）+ 左上白色，
+ *    给平面渐变一点纵深，不加动效。
  *  - 底边距沿用 2026-09-26 的 48→80px（桌面）/64px（移动）。
  */
 ---
@@ -36,12 +39,14 @@
     box-shadow: var(--shadow-hero);
   }
 
-  /* 左上角柔光，让纯渐变有纵深；纯装饰，不参与交互 */
+  /* 双层柔光，让纯渐变有纵深；纯装饰，不参与交互 */
   .hero::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(680px 320px at 12% -30%, var(--on-brand-fill), transparent 70%);
+    background:
+      var(--hero-glow),
+      radial-gradient(680px 320px at 12% -30%, var(--on-brand-fill), transparent 70%);
     pointer-events: none;
   }
 
@@ -77,10 +82,11 @@
     font-size: 1.0625rem;
   }
 
-  /* 渐变底上的按钮必须反色，否则白底白字、蓝底蓝字都会糊掉 */
+  /* 渐变底上的按钮必须反色，否则白底白字、蓝底蓝字都会糊掉。
+     文字色用 --brand-ink（固定深蓝），不用 --brand（深色档会提亮） */
   .btn--primary {
     background: var(--on-brand);
-    color: var(--brand);
+    color: var(--brand-ink);
   }
 
   .btn--secondary {

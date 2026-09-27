@@ -1,22 +1,28 @@
 /* =========================================================================
    design tokens · 「大海学AI」
    M1 只立 token 层；M3 精修只调这里的值，不动组件。
+   2026-09-27：主色体系由 VibeHub 靛蓝紫（#4338CA→#7C3AED）改为站点新 icon 的
+   蓝系——取色自 icon：#0367D0 核心蓝 / #42A3F2 亮蓝（白色「AI Journey」书法字）。
    深色模式跟随系统（prefers-color-scheme），无手动切换。
    ========================================================================= */
 :root {
-  /* 主色 · 靛蓝紫（VibeHub 体系） */
-  --brand:      #4338CA;
-  --brand-2:    #7C3AED;
-  --grad-brand: linear-gradient(135deg, #4338CA 0%, #7C3AED 100%);
-  /* Hero 专用渐变（PRD §8.1「Hero 用蓝紫渐变」）：
-     三段式，中段偏紫，比两端直连更耐看、不显平 */
-  --grad-hero:  linear-gradient(135deg, #4338CA 0%, #6D28D9 52%, #7C3AED 100%);
+  /* 主色 · 图标蓝 */
+  --brand:      #0367D0;   /* 链接/强调文字色：白底 5.45:1、浅灰底 5.09:1 */
+  --brand-2:    #42A3F2;   /* icon 的亮蓝：只做装饰（Hero 柔光），不做文字底 */
+  /* 固定深蓝，不随深浅模式翻转：用于「强制白底」元素上的文字（Hero 主按钮）。
+     深色档里 --brand 会提亮，压到纯白按钮上只剩 2.5:1，必须用这个 */
+  --brand-ink:  #0367D0;
+  --grad-brand: linear-gradient(135deg, #034E9E 0%, #0A6DD3 100%);
+  /* Hero 专用渐变：白字压深蓝。三段式，中段过渡避免两端直连显平。
+     亮端 #0966C8 对纯白 5.61:1、对 94% 白 5.15:1，均过 PRD §7 的 4.5 线 */
+  --grad-hero:  linear-gradient(135deg, #032B63 0%, #04509E 48%, #0966C8 100%);
+  /* Hero 右下角青色柔光：呼应 icon 里那道青蓝笔触，给纯渐变一点纵深 */
+  --hero-glow:  radial-gradient(620px 380px at 88% 116%, color-mix(in srgb, var(--brand-2) 46%, transparent), transparent 68%);
   /* 渐变底上的前景色（只给 Hero 用，别在浅色卡面上误用） */
   --on-brand:      #FFFFFF;
-  /* 副标题用的次级白：渐变最紫端(#7C3AED)对比度约 5.1:1，过 PRD §7 的 4.5 线；
-     若降到 .86 会掉到 4.5 边缘，别再往下调 */
-  --on-brand-soft: rgba(255, 255, 255, .92);
-  --on-brand-line: rgba(255, 255, 255, .28);
+  /* 副标题次级白：对渐变最亮端 5.15:1；降到 .86 会掉到 4.5 边缘，别再往下调 */
+  --on-brand-soft: rgba(255, 255, 255, .94);
+  --on-brand-line: rgba(255, 255, 255, .30);
   --on-brand-fill: rgba(255, 255, 255, .14);
 
   /* 中性阶（浅色） */
@@ -28,11 +34,18 @@
   --border:     #E6E8F0;
   --border-strong: #D9DDEA;
 
-  /* 四个合集标签色（浅色档） */
+  /* 四个合集标签色（浅色档）
+     色相 token（--c-*）用于 chip 的底色 12% / 描边 32%，保持鲜艳；
+     -ink 用于 chip 文字 —— 原配色直接拿色相当文字色，13px 只有 2.8–3.9:1，
+     不达 PRD §7 的 4.5 线，故拆出同色相深一档的墨色 */
   --c-pitfall:  #D97706;   /* 踩坑实录 · 琥珀 */
   --c-cost:     #E11D48;   /* AI账单   · 玫红 */
-  --c-note:     #0891B2;   /* 学习笔记 · 青 */
+  --c-note:     #7C3AED;   /* 学习笔记 · 紫（原青色与品牌蓝同色相，改紫拉开） */
   --c-share:    #059669;   /* 文章分享 · 翠绿 */
+  --c-pitfall-ink: #92400E;
+  --c-cost-ink:    #BE123C;
+  --c-note-ink:    #6D28D9;
+  --c-share-ink:   #047857;
 
   /* 圆角 */
   --r-sm: 8px;  --r-md: 12px;  --r-lg: 16px;  --r-full: 999px;
@@ -65,13 +78,21 @@
     --text-muted: #A0A6BA;
     --border:     #272C3C;
     --border-strong: #333A4E;
+    /* 深色档必须提亮 --brand：深底上正文链接/焦点环若不换，对比度只有 2.4:1 */
+    --brand:      #4FA8F5;
     --shadow-hero: 0 10px 22px -18px rgba(0,0,0,.55);
     /* 深色档 Hero：整体压暗一档，大面积高饱和在暗环境里会刺眼 */
-    --grad-hero:  linear-gradient(135deg, #3730A3 0%, #5B21B6 55%, #6D28D9 100%);
-    /* 标签色提亮，保证深底对比度 */
+    --grad-hero:  linear-gradient(135deg, #03264F 0%, #05417F 52%, #0A62BA 100%);
+    --hero-glow:  radial-gradient(620px 380px at 88% 116%, color-mix(in srgb, var(--brand-2) 30%, transparent), transparent 68%);
+    /* 标签色提亮，保证深底对比度。深底上 chip 底是 12% 自混深色，
+       鲜艳色本身的对比度已够（5.4–8.3:1），墨色直接同色即可 */
     --c-pitfall:  #FBBF24;
     --c-cost:     #FB7185;
-    --c-note:     #22D3EE;
+    --c-note:     #A78BFA;
     --c-share:    #34D399;
+    --c-pitfall-ink: #FBBF24;
+    --c-cost-ink:    #FB7185;
+    --c-note-ink:    #A78BFA;
+    --c-share-ink:   #34D399;
   }
 }

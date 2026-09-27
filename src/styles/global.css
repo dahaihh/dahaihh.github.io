@@ -256,14 +256,15 @@ a.card:hover {
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;
-  color: var(--tag-c, var(--brand));
+  /* 文字取 -ink（同色相深一档），底色/描边取色相 token —— 兼顾鲜艳与可读 */
+  color: var(--tag-ink, var(--tag-c, var(--brand)));
   background: color-mix(in srgb, var(--tag-c, var(--brand)) 12%, transparent);
   border: 1px solid color-mix(in srgb, var(--tag-c, var(--brand)) 32%, transparent);
 }
-.tag--pitfall { --tag-c: var(--c-pitfall); }
-.tag--cost    { --tag-c: var(--c-cost); }
-.tag--note    { --tag-c: var(--c-note); }
-.tag--share   { --tag-c: var(--c-share); }
+.tag--pitfall { --tag-c: var(--c-pitfall); --tag-ink: var(--c-pitfall-ink); }
+.tag--cost    { --tag-c: var(--c-cost);    --tag-ink: var(--c-cost-ink); }
+.tag--note    { --tag-c: var(--c-note);    --tag-ink: var(--c-note-ink); }
+.tag--share   { --tag-c: var(--c-share);   --tag-ink: var(--c-share-ink); }
 
 .tag-list {
   display: flex;
