@@ -20,6 +20,23 @@ export const SITE = {
   author: '大海',
 } as const;
 
+/**
+ * 默认分享卡（Open Graph / Twitter Card）图。
+ *
+ * 为什么要写死宽高：部分平台（微信、QQ、Telegram 等）在拿不到
+ * og:image:width / height 时，会先按小图渲染再异步重排，甚至直接
+ * 只显示成一张缩略图。声明真实像素尺寸可以避免这类延迟与误判。
+ *
+ * ⚠️ 换图时这三项必须同步改：path / width / height / type。
+ */
+export const OG_IMAGE = {
+  path: '/og-default.png',
+  width: 1200,
+  height: 630,
+  type: 'image/png',
+  alt: '书桌前的学习者插画，配文 AI Journey',
+} as const;
+
 export const VERIFICATION = {
   google: '',
   bing: '',

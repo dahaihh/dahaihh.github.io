@@ -9,10 +9,10 @@ import '../styles/tokens.css';
 import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import { SITE, VERIFICATION } from '../data/site';
+import { SITE, VERIFICATION, OG_IMAGE } from '../data/site';
 
 interface Props {
-  /** 页面标题；等于站点名时直接作为 <title>，否则追加「· 大海学AI」 */
+  /** 页面标题；已以站点名开头时直接使用，否则追加「· 大海学AI」 */
   title: string;
   description?: string;
   /** 分享卡图片，站内绝对路径，默认回落 og-default.png */
@@ -25,13 +25,15 @@ interface Props {
 const {
   title,
   description = SITE.description,
-  ogImage = '/og-default.png',
+  ogImage = OG_IMAGE.path,
   ogType = 'website',
   jsonLd,
 } = Astro.props;
 
 const SITE_NAME = SITE.name;
-const pageTitle = title === SITE_NAME ? title : `${title} · ${SITE_NAME}`;
+// 用 startsWith 而不是全等：首页标题本身就是「大海学AI｜……」，
+// 全等判断会导致站点名被追加两次。
+const pageTitle = title.startsWith(SITE_NAME) ? title : `${title} · ${SITE_NAME}`;
 
 // 站长验证码：填了 src/data/site.ts 的 VERIFICATION 才会渲染，留空则一条都不出
 const verificationMetas = [
@@ -86,10 +88,15 @@ const jsonLdTexts = (Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : []).ma
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:type" content={OG_IMAGE.type} />
+    <meta property="og:image:width" content={String(OG_IMAGE.width)} />
+    <meta property="og:image:height" content={String(OG_IMAGE.height)} />
+    <meta property="og:image:alt" content={OG_IMAGE.alt} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={OG_IMAGE.alt} />
 
     <!-- FR-13：页级结构化数据 -->
     {
