@@ -5,6 +5,10 @@
  * 导航 4 项 = 首页 / 文章 / 合集 / 关于；联系入口不进主导航（PRD §4）。
  * 当前项用 aria-current="page" 标记（既是可访问性，也是高亮依据）。
  * 注：所有站内链接带尾斜杠，与 build.format: 'directory' 的产物路径一致。
+ *
+ * 品牌标识（2026-09-27 修）：原先是一个 CSS 画的方块（`<span>AI</span>` + 渐变底），
+ * 换成新图标后它不会跟着变——因为页面里根本没引用图标资产。现改用真实图标
+ * （WebP 5KB / PNG 27KB 回退），36px 展示。24–28px 下图标细节会糊，故不复用 32px 尺寸。
  */
 import MobileNav from './MobileNav.astro';
 
@@ -22,7 +26,10 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
 <header class="site-header">
   <div class="container header-inner">
     <a class="brand" href="/">
-      <span class="brand-mark" aria-hidden="true">AI</span>
+      <picture class="brand-mark">
+        <source srcset="/logo-128.webp" type="image/webp" />
+        <img src="/logo-128.png" alt="" width="36" height="36" decoding="async" />
+      </picture>
       <span class="brand-name">大海学AI</span>
     </a>
 
@@ -76,18 +83,18 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
   .brand:hover {
     text-decoration: none;
   }
+  /* 真实图标：圆角已烘焙在图里（四角透明），故不再叠 CSS border-radius，
+     否则会与原图自带圆角双重裁切、把笔画切掉一圈 */
   .brand-mark {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
     flex: none;
-    width: 32px;
-    height: 32px;
-    border-radius: var(--r-sm);
-    background: var(--grad-brand);
-    color: #ffffff;
-    font-size: 0.8125rem;
-    font-weight: 700;
+    width: 36px;
+    height: 36px;
+  }
+  .brand-mark img {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 
   .site-nav {
